@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+
+# Sensitive business / pricing data (never commit)
+data/item_master.xlsx
+data/*.xls
+data/*.xlsx
+input/current_pdf/*
+!input/current_pdf/.gitkeep
+output/*
+!output/.gitkeep
+price_history.csv
+*.pdf
+*.PDF
+
+# Excel temp / lock files
+~$*
+*.tmp
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp

@@ -1,0 +1,1 @@
+"""Egg price checker package."""
