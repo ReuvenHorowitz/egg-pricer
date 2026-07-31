@@ -24,12 +24,15 @@ Fill in your Business Central item numbers, costs, prices, and multipliers.
 ## Usage
 
 1. Drop the latest Martin's PDF into `input/current_pdf/`
-2. Maintain `data/item_master.xlsx` with your item costs, prices, and multipliers
-3. Run:
+2. **Close** `data/item_master.xlsx` if it is open in Excel
+3. Run from the project folder:
 
-```bash
+```powershell
+cd "C:\Users\rhorowitz\OneDrive - A&L Foods\Desktop\Code\egg pricer"
 python run.py
 ```
+
+On Windows PowerShell, use `python run.py` (not `run.py` alone).
 
 ## Outputs
 
@@ -58,7 +61,7 @@ Otherwise:
 suggested_price = new_cost / (1 - target_margin)
 ```
 
-Suggested prices are rounded to the nearest `$0.05`.
+Suggested prices are always rounded **up** to the next `$0.05` (never rounded down).
 
 ## Notes
 
@@ -67,3 +70,4 @@ Suggested prices are rounded to the nearest `$0.05`.
 - Changed costs are highlighted in yellow on the review sheet
 - Raw PDF list prices are kept separate from calculated case costs
 - **Git:** PDFs, `item_master.xlsx`, output workbooks, and `price_history.csv` are gitignored and stay on your machine only
+

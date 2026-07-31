@@ -55,7 +55,13 @@ def load_item_master() -> list[ItemMasterRow]:
     if not ITEM_MASTER_PATH.exists():
         raise ItemMasterError(f"Item master not found: {ITEM_MASTER_PATH}")
 
-    workbook = load_workbook(ITEM_MASTER_PATH, read_only=True, data_only=True)
+    try:
+        workbook = load_workbook(ITEM_MASTER_PATH, read_only=True, data_only=True)
+    except PermissionError as exc:
+        raise ItemMasterError(
+            f"Cannot read item master (file may be open in Excel): {ITEM_MASTER_PATH}. "
+            "Close the workbook and run again."
+        ) from exc
     sheet = workbook.active
     rows = list(sheet.iter_rows(values_only=True))
     workbook.close()

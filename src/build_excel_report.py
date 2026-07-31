@@ -164,7 +164,7 @@ def _build_settings_sheet(
         ("Item Master Path", str(ITEM_MASTER_PATH)),
         ("Item Master Rows Loaded", len(priced_rows)),
         ("Tracked Vendor Numbers", ", ".join(TRACKED_VENDOR_NUMBERS)),
-        ("Rounding Rule", f"Nearest ${ROUNDING_INCREMENT:.2f}"),
+        ("Rounding Rule", f"Round up to nearest ${ROUNDING_INCREMENT:.2f} (never down)"),
         ("Price History Path", str(PRICE_HISTORY_PATH)),
         ("Output Workbook", str(output_path)),
         ("Pricing Formula", "new_cost = raw_list_price * cost_multiplier"),

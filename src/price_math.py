@@ -1,6 +1,7 @@
 """Pricing calculations for egg price review rows."""
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 
 from src.config import COST_CHANGE_TOLERANCE, ROUNDING_INCREMENT
@@ -23,8 +24,9 @@ class PricedRow:
 
 
 def round_to_increment(value: float, increment: float = ROUNDING_INCREMENT) -> float:
-    """Round a value to the nearest pricing increment."""
-    return round(value / increment) * increment
+    """Round a value up to the next pricing increment (never round down)."""
+    units = math.ceil(value / increment - 1e-9)
+    return round(units * increment, 2)
 
 
 def compute_price_row(item: ItemMasterRow, parsed_rows: dict[str, ParsedPdfRow]) -> PricedRow:
