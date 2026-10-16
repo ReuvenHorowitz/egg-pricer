@@ -23,7 +23,7 @@ Fill in your Business Central item numbers, costs, prices, and multipliers.
 
 ## Usage
 
-1. Drop the latest Martin's PDF into `input/current_pdf/`
+1. Drop the latest Martin's PDF directly into `input/`
 2. **Close** `data/item_master.xlsx` if it is open in Excel
 3. Run from the project folder:
 
@@ -70,4 +70,3 @@ Suggested prices are always rounded **up** to the next `$0.05` (never rounded do
 - Changed costs are highlighted in yellow on the review sheet
 - Raw PDF list prices are kept separate from calculated case costs
 - **Git:** PDFs, `item_master.xlsx`, output workbooks, and `price_history.csv` are gitignored and stay on your machine only
-

@@ -5,7 +5,7 @@ from datetime import date
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-INPUT_PDF_DIR = PROJECT_ROOT / "input" / "current_pdf"
+INPUT_PDF_DIR = PROJECT_ROOT / "input"
 ITEM_MASTER_PATH = PROJECT_ROOT / "data" / "item_master.xlsx"
 OUTPUT_DIR = PROJECT_ROOT / "output"
 PRICE_HISTORY_PATH = PROJECT_ROOT / "price_history.csv"

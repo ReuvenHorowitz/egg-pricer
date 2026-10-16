@@ -11,8 +11,6 @@ venv/
 data/item_master.xlsx
 data/*.xls
 data/*.xlsx
-input/current_pdf/*
-!input/current_pdf/.gitkeep
 output/*
 !output/.gitkeep
 price_history.csv
