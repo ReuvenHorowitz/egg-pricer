@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import csv
+import os
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -24,6 +26,7 @@ HISTORY_HEADERS = [
     "run_date",
     "pdf_filename",
     "item_number",
+    "description",
     "vendor_number",
     "raw_list_price",
     "cost_multiplier",
@@ -41,6 +44,25 @@ def append_price_history(priced_rows: list[PricedRow], pdf_filename: str) -> Pat
     """Append one history row per item without overwriting prior runs."""
     run_time = datetime.now()
     write_header = not PRICE_HISTORY_PATH.exists() or PRICE_HISTORY_PATH.stat().st_size == 0
+    if not write_header:
+        with PRICE_HISTORY_PATH.open("r", newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            existing_headers = reader.fieldnames or []
+            existing_rows = list(reader)
+
+        if "description" not in existing_headers:
+            with tempfile.NamedTemporaryFile(
+                "w",
+                newline="",
+                encoding="utf-8",
+                dir=PRICE_HISTORY_PATH.parent,
+                delete=False,
+            ) as temporary:
+                temporary_path = Path(temporary.name)
+                writer = csv.DictWriter(temporary, fieldnames=HISTORY_HEADERS)
+                writer.writeheader()
+                writer.writerows(existing_rows)
+            os.replace(temporary_path, PRICE_HISTORY_PATH)
 
     with PRICE_HISTORY_PATH.open("a", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=HISTORY_HEADERS)
@@ -54,6 +76,7 @@ def append_price_history(priced_rows: list[PricedRow], pdf_filename: str) -> Pat
                     "run_date": run_time.date().isoformat(),
                     "pdf_filename": pdf_filename,
                     "item_number": priced.item.item_number,
+                    "description": priced.item.description,
                     "vendor_number": priced.item.vendor_number,
                     "raw_list_price": priced.raw_list_price,
                     "cost_multiplier": priced.item.cost_multiplier,
@@ -72,16 +95,36 @@ def append_price_history(priced_rows: list[PricedRow], pdf_filename: str) -> Pat
 
 def _print_summary(priced_rows: list[PricedRow], report_path: Path, history_path: Path) -> None:
     print("\nEgg Price Review Summary")
-    print("-" * 72)
+    headers = ("Item Code", "Description", "Vendor", "Raw Price", "New Cost", "Suggested", "Action")
+    rows = []
     for priced in priced_rows:
         raw_price = f"{priced.raw_list_price:.4f}" if priced.raw_list_price is not None else "MISSING"
         new_cost = f"${priced.new_cost:.2f}" if priced.new_cost is not None else "N/A"
         suggested = f"${priced.suggested_price:.2f}" if priced.suggested_price is not None else "N/A"
-        print(
-            f"{priced.item.item_number:6} {priced.item.vendor_number:6}  raw={raw_price:>8}  new_cost={new_cost:>8}  "
-            f"suggested={suggested:>8}  {priced.action}"
+        rows.append(
+            (
+                priced.item.item_number,
+                priced.item.description,
+                priced.item.vendor_number,
+                raw_price,
+                new_cost,
+                suggested,
+                priced.action,
+            )
         )
-    print("-" * 72)
+
+    widths = [
+        max(len(headers[index]), *(len(row[index]) for row in rows))
+        for index in range(len(headers))
+    ]
+    alignments = ("<", "<", "<", ">", ">", ">", "<")
+    table_width = sum(widths) + 2 * (len(headers) - 1)
+    print("-" * table_width)
+    print("  ".join(f"{value:{alignments[index]}{widths[index]}}" for index, value in enumerate(headers)))
+    print("-" * table_width)
+    for row in rows:
+        print("  ".join(f"{value:{alignments[index]}{widths[index]}}" for index, value in enumerate(row)))
+    print("-" * table_width)
     print(f"Report:  {report_path}")
     print(f"History: {history_path}")
 
