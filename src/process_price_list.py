@@ -78,7 +78,7 @@ def _print_summary(priced_rows: list[PricedRow], report_path: Path, history_path
         new_cost = f"${priced.new_cost:.2f}" if priced.new_cost is not None else "N/A"
         suggested = f"${priced.suggested_price:.2f}" if priced.suggested_price is not None else "N/A"
         print(
-            f"{priced.item.vendor_number:6}  raw={raw_price:>8}  new_cost={new_cost:>8}  "
+            f"{priced.item.item_number:6} {priced.item.vendor_number:6}  raw={raw_price:>8}  new_cost={new_cost:>8}  "
             f"suggested={suggested:>8}  {priced.action}"
         )
     print("-" * 72)
