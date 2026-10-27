@@ -137,7 +137,9 @@ def main() -> int:
 
         pdf_path = get_latest_pdf()
         added_date = datetime.fromtimestamp(pdf_path.stat().st_ctime).date().isoformat()
-        print(f"Reading input file: {pdf_path} (added to input folder: {added_date})")
+        print(f"\nInput file used: {pdf_path.name}", flush=True)
+        print(f"Input file path: {pdf_path}", flush=True)
+        print(f"Added to input folder: {added_date}", flush=True)
         items = load_item_master()
         parsed_rows, pdf_metadata = parse_martins_pdf(pdf_path, TRACKED_VENDOR_NUMBERS)
         priced_rows = [compute_price_row(item, parsed_rows) for item in items]
