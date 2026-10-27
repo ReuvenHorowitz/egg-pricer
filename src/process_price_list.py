@@ -136,6 +136,8 @@ def main() -> int:
         ITEM_MASTER_PATH.parent.mkdir(parents=True, exist_ok=True)
 
         pdf_path = get_latest_pdf()
+        added_date = datetime.fromtimestamp(pdf_path.stat().st_ctime).date().isoformat()
+        print(f"Reading input file: {pdf_path} (added to input folder: {added_date})")
         items = load_item_master()
         parsed_rows, pdf_metadata = parse_martins_pdf(pdf_path, TRACKED_VENDOR_NUMBERS)
         priced_rows = [compute_price_row(item, parsed_rows) for item in items]

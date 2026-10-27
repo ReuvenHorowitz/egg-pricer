@@ -23,7 +23,7 @@ Fill in your Business Central item numbers, costs, prices, and multipliers.
 
 ## Usage
 
-1. Drop the latest Martin's PDF directly into `input/`
+1. Drop the latest Martin's PDF directly into `input/`. The program selects the PDF with the newest file creation date (the date it was added to the folder on Windows) and prints its path and added date when it runs.
 2. **Close** `data/item_master.xlsx` if it is open in Excel
 3. Run from the project folder:
 

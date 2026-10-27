@@ -38,15 +38,19 @@ class ConfigError(Exception):
 
 
 def get_latest_pdf() -> Path:
-    """Return the newest PDF in the input directory."""
+    """Return the PDF most recently added to the input directory."""
     if not INPUT_PDF_DIR.exists():
         raise ConfigError(f"Input directory not found: {INPUT_PDF_DIR}")
 
-    pdfs = sorted(INPUT_PDF_DIR.glob("*.pdf"), key=lambda path: path.stat().st_mtime, reverse=True)
-    pdfs.extend(
-        sorted(INPUT_PDF_DIR.glob("*.PDF"), key=lambda path: path.stat().st_mtime, reverse=True)
+    pdfs = [
+        path
+        for path in INPUT_PDF_DIR.iterdir()
+        if path.is_file() and path.suffix.lower() == ".pdf"
+    ]
+    pdfs.sort(
+        key=lambda path: (path.stat().st_ctime, path.name.casefold()),
+        reverse=True,
     )
-    pdfs = sorted({path.resolve(): path for path in pdfs}.values(), key=lambda p: p.stat().st_mtime, reverse=True)
 
     if not pdfs:
         raise ConfigError(f"No PDF found in {INPUT_PDF_DIR}")
